@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Monthly Pass</title>
+    <style>
+         :root {
+            --app-blue: #1f86d5;
+            --card-bg: #ffffff;
+            --qr-border-blue: #1f86d5;
+            --badge-blue: #2c85fd;
+            --text-black: #000000;
+            --text-grey: #666666;
+            --divider-grey: #dddddd;
+            --slider-grey: #e5e5e5;
+        }
+        
+        .qr-img {
+            width: 170px;
+            /* smaller QR image */
+            height: 170px;
+            object-fit: contain;
+            background: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+        }
+        
+        body {
+            background: #ffffff;
+            /* bottom sides white */
+            min-height: 100vh;
+        }
+        
+        .app {
+            position: relative;
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 12px 10px 24px;
+        }
+        /* Blue header background with rounded bottom corners (gives blue sides at top) */
+        
+        .blue-top {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            height: 340px;
+            background: var(--app-blue);
+            border-radius: 0 0 16px 16px;
+            z-index: -1;
+        }
+        /* Header inside blue area (OS status bar is above this, drawn by phone) */
+        
+        .header {
+            padding-top: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+        
+        .header-back {
+            position: absolute;
+            left: 8px;
+            font-size: 26px;
+            line-height: 1;
+        }
+        /* White pass card */
+        
+        .card {
+            margin-top: 20px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 26px 18px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            margin: 0 10px;
+            min-height: calc(100vh - 80px);
+        }
+        /* QR area */
+        
+        .qr-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: -6px;
+            /* pull QR upward */
+            margin-bottom: 12px;
+            /* match spacing below QR */
+        }
+        
+        .qr-border {
+            padding: 16px;
+            /* thinner blue frame */
+            border-radius: 22px;
+            background: var(--qr-border-blue);
+        }
+        
+        .qr-box {
+            width: 240px;
+            height: 240px;
+            background: repeating-linear-gradient( 45deg, #000 0, #000 2px, #fff 2px, #fff 4px), repeating-linear-gradient( -45deg, #000 0, #000 2px, #fff 2px, #fff 4px);
+            background-blend-mode: multiply;
+            border-radius: 8px;
+        }
+        /* text under the QR */
+        
+        .tap-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-black);
+            margin: -12px 0 0px;
+            /* ↑ NEW: closer to QR and dotted line */
+        }
+        /* dotted line under "Tap to enlarge" */
+        
+        .divider {
+            border-top: 3px dashed var(--divider-grey);
+            width: 88%;
+            /* slightly inset from card edges like real ticket */
+            margin: 3px auto 14px;
+            /* small gap above & below, centered */
+        }
+        /* INTERSTATE / ZONE section */
+        
+        .ticket-row {
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            margin-top: -4px;
+            /* pulls everything closer to dotted line */
+            margin-bottom: 8px;
+            /* small gap below INTERSTATE block */
+        }
+        
+        .ticket-text-main {
+            flex: 1;
+            /* take full row width */
+            text-align: center;
+            /* center INTERSTATE / 3 / ZONE RIDE */
+        }
+        
+        .badge {
+            position: absolute;
+            left: 26px;
+            /* bigger = move closer to the 3  */
+            top: 34px;
+            /* bigger = move down toward the 3 */
+            /* keep your other badge styles as-is */
+        }
+        
+        .badge {
+            position: absolute;
+            left: 2px;
+            /* keep adjusting for position */
+            top: 50px;
+            /* 🔹 FIXED box size */
+            width: 72px;
+            /* adjust if you want the box wider/narrower */
+            height: 70px;
+            /* adjust if you want the box taller/shorter */
+            padding: 0;
+            /* no extra blue space from padding */
+            box-sizing: border-box;
+            background: #2c85fd;
+            /* bright blue like real pass */
+            color: #ffffff;
+            border-radius: 5px;
+            border: 3px solid #000;
+            box-shadow: none;
+            /* center text inside the fixed box */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 26px;
+            /* ⬅️ change ONLY this to make text bigger/smaller */
+            line-height: 1.05;
+            text-align: center;
+        }
+        
+        .badge span {
+            display: block;
+        }
+        
+        .ticket-text-main {
+            text-align: center;
+        }
+        
+        .ticket-title {
+            color: #ff2f2f;
+            font-weight: 700;
+            font-size: 36px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        
+        .zone-number {
+            font-size: 68px;
+            /* adjust size */
+            font-weight: 760;
+            /* bolder like iOS */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+            line-height: 1;
+            /* tighter vertical spacing */
+            margin: -14px 0 0;
+            /* small gap under INTERSTATE */
+        }
+        
+        .zone-label {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: var(--text-black);
+        }
+        /* Push bottom section down */
+        
+        .spacer {
+            flex: 1;
+        }
+        /* Animated multi-color bar (like ticket anti-fraud bar) */
+        
+        .color-bar-wrapper {
+            margin: 0 6px 8px;
+        }
+        
+        .color-bar-viewport {
+            height: 22px;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        /* Animated flashing 3-color bar (like real video) */
+        
+        .color-bar-animated {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient( 90deg, #6eb8ff 0%, #6eb8ff 33.33%, #ff31c4 33.33%, #ff31c4 66.66%, #34456c 66.66%, #34456c 100%);
+            animation: barFlash 1.0s steps(1) infinite;
+        }
+        
+        @keyframes barFlash {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            /* flash OFF */
+            100% {
+                opacity: 1;
+            }
+            /* flash ON */
+        }
+        
+        @keyframes barSlide {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-33.33%);
+            }
+        }
+        /* Grey progress bar with blue dot showing days used */
+        
+        .slider-wrapper {
+            width: 85%;
+            /* 70% of card width → shorter line */
+            margin: 6px auto 0;
+            /* center it horizontally */
+        }
+        
+        .slider-track {
+            height: 3px;
+            background: #e5e5e5;
+            border-radius: 999px;
+            /* light grey */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #1f86d5;
+            /* BLUE fill like screenshot */
+            border-radius: 0;
+            width: 5%;
+            /* JS updates this */
+        }
+        
+        .slider-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            /* was 8px */
+            height: 6px;
+            border-radius: 50%;
+            background: #007aff;
+            /* blue dot */
+            left: 5%;
+            /* JS updates this */
+        }
+        
+        .expiry {
+            text-align: center;
+            margin-top: 8px;
+            /* was 18px – moves text UP */
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-black);
+        }
+        
+        .validator-link {
+            margin-top: 20px;
+            /* was 6px → now lower */
+            text-align: center;
+            font-size: 12px;
+            color: #000000;
+        }
+        
+        .validator-link a {
+            color: #000000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- blue top (sits behind header and top of card) -->
+        <div class="blue-top"></div>
+
+        <!-- header: OS status bar is above this, drawn by the phone itself -->
+        <div class="header">
+            <div class="header-back">‹</div>
+            <div>Monthly Pass</div>
+        </div>
+
+        <!-- main pass card -->
+        <div class="card">
+            <div class="qr-wrapper">
+                <div class="qr-border">
+                    <img src="images/ExampleCode.png" class="qr-img" />
+                </div>
+            </div>
+
+            <div class="tap-text">Tap to enlarge</div>
+
+            <div class="divider"></div>
+
+            <div class="ticket-row">
+                <div class="badge">
+                    <span>DEC</span>
+                    <span>2025</span>
+                </div>
+                <div class="ticket-text-main">
+                    <div class="ticket-title">INTERSTATE</div>
+                    <div class="zone-number">3</div>
+                    <div class="zone-label">ZONE RIDE</div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <!-- animated three-color bar -->
+            <div class="color-bar-wrapper">
+                <div class="color-bar-viewport">
+                    <div class="color-bar-animated"></div>
+                </div>
+            </div>
+
+            <!-- progress line for 30 days -->
+            <div class="slider-wrapper">
+                <div class="slider-track">
+                    <div class="slider-fill" id="slider-fill"></div>
+                    <div class="slider-dot" id="slider-dot"></div>
+                </div>
+            </div>
+
+            <div class="expiry" id="expiry-text">Expires in 30 days.</div>
+
+            <div class="validator-link">
+                <a href="#">View Onboard Validator Instructions</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Total days
+        const TOTAL_DAYS = 30;
+
+        // YOU WILL ENTER THE REMAINING DAYS HERE:
+        let remainingDays = 15; // change manually: 29, 28, 27, ... 1, 0
+
+        // Calculate used days
+        let usedDays = TOTAL_DAYS - remainingDays;
+        if (usedDays < 0) usedDays = 0;
+        if (usedDays > TOTAL_DAYS) usedDays = TOTAL_DAYS;
+
+        // Percent width
+        let percent = (usedDays / TOTAL_DAYS) * 100;
+
+        // Update bar + dot
+        document.getElementById("slider-fill").style.width = percent + "%";
+        document.getElementById("slider-dot").style.left = percent + "%";
+
+        // Update text
+        document.getElementById("expiry-text").textContent =
+            "Expires in " + remainingDays + " days.";
+    </script>
+</body>
+
+</html>
