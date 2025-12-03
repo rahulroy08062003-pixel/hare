@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+/>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>Monthly Pass</title>
@@ -39,17 +44,20 @@
         
         body {
             background:  #1f86d5;
-            /* bottom sides white */
+            margin: 0;
+    padding: 0;
+
             min-height: 100vh;
         }
         
         .app {
-            position: relative;
-            max-width: 430px;
-            margin: 0 auto;
-            min-height: 100vh;
-            padding: 12px 10px 24px;
-        }
+    position: relative;
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 10px 24px;
+}
+
         /* Blue header background with rounded bottom corners (gives blue sides at top) */
         
         .blue-top {
@@ -441,6 +449,7 @@
 </body>
 
 </html>
+
 
 
 
