@@ -13,8 +13,8 @@
          :root {
             --app-blue: #1f86d5;
             --card-bg: #ffffff;
-            --qr-border-blue: #F7DC3A;
-            --badge-blue: #F7DC3A;
+            --qr-border-blue:#FF5A52;
+            --badge-blue:#FF5A52;
             --text-black: #000000;
             --text-grey: #666666;
             --divider-grey: #dddddd;
@@ -180,7 +180,7 @@
             padding: 0;
             /* no extra blue space from padding */
             box-sizing: border-box;
-            background: #F7DC3A;
+            background: #FF5A52;
             /* bright blue like real pass */
             color: #ffffff;
             border-radius: 5px;
@@ -256,9 +256,9 @@
     width: 100%;
     background: linear-gradient(
         90deg,
-    #B8A79A 0%, #B8A79A 33.33%,
-#D9C44A  33.33%, #D9C44A 66.66%,
-#8FCE6A 66.66%, #8FCE6A 100%
+     #4B5563 0%,  #4B5563 33.33%,
+ #9AA5E8  33.33%,  #9AA5E8 66.66%,
+#6F3CC3 66.66%,#6F3CC3 100%
 
     );
     animation: barFlash 1.0s steps(1) infinite;
@@ -420,7 +420,7 @@
         const TOTAL_DAYS = 31;
 
         // YOU WILL ENTER THE REMAINING DAYS HERE:
-        let remainingDays = 24; // change manually: 29, 28, 27, ... 1, 0
+        let remainingDays = 23; // change manually: 29, 28, 27, ... 1, 0
 
         // Calculate used days
         let usedDays = TOTAL_DAYS - remainingDays;
